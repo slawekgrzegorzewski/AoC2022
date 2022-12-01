@@ -4,7 +4,6 @@ import com.adventofcode.input.Input;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
 public class Day1 {
     private final List<List<Integer>> calories;
