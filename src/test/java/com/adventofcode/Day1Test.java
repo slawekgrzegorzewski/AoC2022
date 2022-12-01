@@ -18,11 +18,15 @@ class Day1Test {
 
     @Test
     void testPart1() {
-        assertEquals(70720, day1.part1());
+        int part1Result = day1.part1();
+        System.out.println("part1t = " + part1Result);
+        assertEquals(70720, part1Result);
     }
 
     @Test
     void testPart2() {
-        assertEquals(207148, day1.part2());
+        int part2Result = day1.part2();
+        System.out.println("part2 = " + part2Result);
+        assertEquals(207148, part2Result);
     }
 }
