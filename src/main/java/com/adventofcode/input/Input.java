@@ -24,7 +24,14 @@ public class Input {
         return groups;
     }
 
-    public static List<String> day2(String resourceName) throws IOException {
+    public static List<String[]> day2(String resourceName) throws IOException {
+        return getInputFromFile(resourceName)
+                .stream()
+                .map(line -> line.split(" "))
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> day3(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
