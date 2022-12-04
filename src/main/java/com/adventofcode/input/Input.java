@@ -1,5 +1,7 @@
 package com.adventofcode.input;
 
+import com.adventofcode.day4.Range;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,7 +37,15 @@ public class Input {
         return getInputFromFile(resourceName);
     }
 
-    public static List<String> day4(String resourceName) throws IOException {
+    public static List<Pair<Range, Range>> day4(String resourceName) throws IOException {
+        return getInputFromFile(resourceName)
+                .stream()
+                .map(line -> line.split(","))
+                .map(ranges -> new Pair<>(Range.parse(ranges[0]), Range.parse(ranges[1])))
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> day5(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
