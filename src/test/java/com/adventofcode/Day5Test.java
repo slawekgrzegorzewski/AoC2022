@@ -18,13 +18,13 @@ class Day5Test {
 
     @Test
     void testPart1() {
-        int part1Result = day5.part1();
-        assertEquals(0, part1Result);
+        String part1Result = day5.part1();
+        assertEquals("TPGVQPFDH", part1Result);
     }
 
     @Test
     void testPart2() {
-        int part2Result = day5.part2();
-        assertEquals(0, part2Result);
+        String part2Result = day5.part2();
+        assertEquals("DMRDFRHHH", part2Result);
     }
 }
