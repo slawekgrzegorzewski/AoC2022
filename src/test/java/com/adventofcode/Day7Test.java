@@ -8,24 +8,24 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Day6Test {
+class Day7Test {
 
-    static Day6 day6;
+    static Day7 day7;
 
     @BeforeEach
     public void init() throws IOException {
-        day6 = new Day6();
+        day7 = new Day7();
     }
 
     @Test
     void testPart1() {
-        int part1Result = day6.part1();
-        assertEquals(1538, part1Result);
+        int part1Result = day7.part1();
+        assertEquals(0, part1Result);
     }
 
     @Test
     void testPart2() {
-        int part2Result = day6.part2();
-        assertEquals(2315, part2Result);
+        int part2Result = day7.part2();
+        assertEquals(0, part2Result);
     }
 }

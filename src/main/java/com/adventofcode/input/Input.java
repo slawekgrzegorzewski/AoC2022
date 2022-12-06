@@ -49,7 +49,11 @@ public class Input {
         return getInputFromFile(resourceName);
     }
 
-    public static List<String> day6(String resourceName) throws IOException {
+    public static String day6(String resourceName) throws IOException {
+        return String.join("", getInputFromFile(resourceName));
+    }
+
+    public static List<String> day7(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
