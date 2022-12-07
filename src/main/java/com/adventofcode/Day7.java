@@ -22,10 +22,10 @@ public class Day7 {
             currentDir = command.execute(currentDir);
         }
         root = new ChangeDirectoryToRootCommand().execute(currentDir);
+        new PrinterImpl().print(root, 0);
     }
 
     long part1() {
-        new PrinterImpl().print(root, 0);
         return new FilterImpl().filter(
                         root,
                         d -> d.size() <= 100000L)
