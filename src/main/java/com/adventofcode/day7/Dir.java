@@ -3,11 +3,13 @@ package com.adventofcode.day7;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Dir implements FilesSystemElement {
     private final Dir parent;
     private final List<FilesSystemElement> children = new ArrayList<>();
     private final String name;
+    private final AtomicLong size = new AtomicLong(0L);
 
     public Dir(String name) {
         this.parent = null;
@@ -30,7 +32,12 @@ public class Dir implements FilesSystemElement {
 
     @Override
     public long size() {
-        return children.stream().mapToLong(FilesSystemElement::size).sum();
+        return size.updateAndGet(value -> {
+            if (value == 0L) {
+                value = children.stream().mapToLong(FilesSystemElement::size).sum();
+            }
+            return value;
+        });
     }
 
     @Override
@@ -38,7 +45,14 @@ public class Dir implements FilesSystemElement {
         return List.copyOf(children);
     }
 
+    @Override
+    public void contentChanged() {
+        size.set(0L);
+        parent().ifPresent(FilesSystemElement::contentChanged);
+    }
+
     public void add(FilesSystemElement dir) {
         this.children.add(dir);
+        this.contentChanged();
     }
 }

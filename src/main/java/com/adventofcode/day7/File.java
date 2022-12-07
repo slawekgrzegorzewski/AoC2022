@@ -25,4 +25,8 @@ public class File implements FilesSystemElement {
     public List<FilesSystemElement> children() {
         return List.of();
     }
+
+    @Override
+    public void contentChanged() {
+    }
 }
