@@ -1,4 +1,3 @@
-
 package com.adventofcode;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -8,24 +7,24 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Day7Test {
+class Day8Test {
 
-    static Day7 day7;
+    static Day8 day8;
 
     @BeforeEach
     public void init() throws IOException {
-        day7 = new Day7();
+        day8 = new Day8();
     }
 
     @Test
     void testPart1() {
-        long part1Result = day7.part1();
-        assertEquals(1306611L, part1Result);
+        long part1Result = day8.part1();
+        assertEquals(0L, part1Result);
     }
 
     @Test
     void testPart2() {
-        long part2Result = day7.part2();
-        assertEquals(13210366L, part2Result);
+        long part2Result = day8.part2();
+        assertEquals(0L, part2Result);
     }
 }
