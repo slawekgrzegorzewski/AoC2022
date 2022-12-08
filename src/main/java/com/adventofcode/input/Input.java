@@ -57,7 +57,13 @@ public class Input {
         return getInputFromFile(resourceName);
     }
 
-    public static List<String> day8(String resourceName) throws IOException {
+    public static int[][] day8(String resourceName) throws IOException {
+        return getInputFromFile(resourceName).stream()
+                .map(line -> line.chars().map(c -> Integer.parseInt(String.valueOf((char)c))).toArray())
+                .toArray(int[][]::new);
+    }
+
+    public static List<String> day9(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
