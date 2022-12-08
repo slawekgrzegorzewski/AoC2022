@@ -9,4 +9,6 @@ public interface FilesSystemElement {
 
     List<FilesSystemElement> children();
 
+    void contentChanged();
+
 }
