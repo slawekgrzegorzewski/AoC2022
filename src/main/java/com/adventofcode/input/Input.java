@@ -1,6 +1,7 @@
 package com.adventofcode.input;
 
 import com.adventofcode.day4.Range;
+import com.adventofcode.day9.Move;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,11 +60,18 @@ public class Input {
 
     public static int[][] day8(String resourceName) throws IOException {
         return getInputFromFile(resourceName).stream()
-                .map(line -> line.chars().map(c -> Integer.parseInt(String.valueOf((char)c))).toArray())
+                .map(line -> line.chars().map(c -> Integer.parseInt(String.valueOf((char) c))).toArray())
                 .toArray(int[][]::new);
     }
 
-    public static List<String> day9(String resourceName) throws IOException {
+    public static List<Move> day9(String resourceName) throws IOException {
+        return getInputFromFile(resourceName).stream()
+                .map(line -> line.split(" "))
+                .map(parts -> new Move(Move.Direction.valueOf(parts[0]), Integer.parseInt(parts[1])))
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> day10(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
