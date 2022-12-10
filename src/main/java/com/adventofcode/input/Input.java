@@ -75,6 +75,10 @@ public class Input {
         return getInputFromFile(resourceName);
     }
 
+    public static List<String> day11(String resourceName) throws IOException {
+        return getInputFromFile(resourceName);
+    }
+
     private static List<String> getInputFromFile(String resourceName) throws IOException {
         try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(Input.class.getResourceAsStream(resourceName)));
              BufferedReader reader = new BufferedReader(in)) {

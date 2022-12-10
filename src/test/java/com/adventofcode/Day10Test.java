@@ -19,12 +19,19 @@ class Day10Test {
     @Test
     void testPart1() {
         long part1Result = day10.part1();
-        assertEquals(0L, part1Result);
+        assertEquals(13220L, part1Result);
     }
 
     @Test
     void testPart2() {
-        long part2Result = day10.part2();
-        assertEquals(0L, part2Result);
+        String part2Result = day10.part2();
+        String expected = """
+                ###..#..#..##..#..#.#..#.###..####.#..#.
+                #..#.#..#.#..#.#.#..#..#.#..#.#....#.#..
+                #..#.#..#.#..#.##...####.###..###..##...
+                ###..#..#.####.#.#..#..#.#..#.#....#.#..
+                #.#..#..#.#..#.#.#..#..#.#..#.#....#.#..
+                #..#..##..#..#.#..#.#..#.###..####.#..#.""";
+        assertEquals(expected, part2Result);
     }
 }
