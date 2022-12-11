@@ -3,6 +3,7 @@ package com.adventofcode;
 import com.adventofcode.input.Input;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.stream.Stream;
 
 public class Day10 {
 
-    private final Map<Integer, Integer> xValuesPerCycles;
+    private final List<Integer> xValuesPerCycles;
 
     public Day10() throws IOException {
         xValuesPerCycles = processProgram(Input.day10("/day10"));
@@ -34,14 +35,13 @@ public class Day10 {
         return buffer.toString();
     }
 
-    private Map<Integer, Integer> processProgram(List<String> program) {
-        Map<Integer, Integer> xValuesAtEndOfCycle = new HashMap<>();
-        int cycle = 0;
+    private List<Integer> processProgram(List<String> program) {
+        List<Integer> xValuesAtEndOfCycle = new ArrayList<>();
         int X = 1;
         for (String command : program) {
-            xValuesAtEndOfCycle.put(++cycle, X);
+            xValuesAtEndOfCycle.add(X);
             if (!command.equals("noop")) {
-                xValuesAtEndOfCycle.put(++cycle, X);
+                xValuesAtEndOfCycle.add(X);
                 X += Integer.parseInt(command.replace("addx ", ""));
             }
         }
