@@ -1,61 +1,68 @@
 package com.adventofcode.day11;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MonkeyBehaviour {
-    private final LinkedList<Item> startingItems;
+    private final LinkedList<Item> items;
     private final Operation operation;
-    private final Predicate<BigDecimal> test;
+    private final Predicate<Number> test;
     private final int ifTrue;
     private final int ifFalse;
-    private final int worryLevelManagingFactor;
+    private final int factorForWorryLevel;
 
     public static MonkeyBehaviour parse(List<String> input, int worryLevelManagingFactor, int initialMonkeyIndex) {
+        Function<Integer, Number> numberCreator = worryLevelManagingFactor == 1
+                ? DividersNumber::new
+                : RegularNumber::new;
+//        Function<Integer, Number> numberCreator = NumberForDebugging::new;
         LinkedList<Item> startingItems = Arrays.stream(input.get(1)
                         .replace("  Starting items:", "")
                         .trim()
                         .split(","))
-                .map(v -> new Item(new BigDecimal(v.trim()), initialMonkeyIndex))
+                .map(v -> new Item(numberCreator.apply(Integer.parseInt(v.trim())), initialMonkeyIndex))
                 .collect(Collectors.toCollection(LinkedList::new));
+
         String operation = input.get(2).trim().replace("Operation:", "").trim();
-        BigDecimal divisableBy = new BigDecimal(input.get(3).trim().replace("Test: divisible by ", "").trim());
-        Predicate<BigDecimal> test = bd -> bd.divideAndRemainder(divisableBy)[1].equals(BigDecimal.ZERO);
+
+        int divisableBy = Integer.parseInt(input.get(3).trim().replace("Test: divisible by ", "").trim());
+        Predicate<Number> test = n -> n.isDivisibleBy(divisableBy);
+
         int ifTrue = Integer.parseInt(input.get(4).trim().replace("If true: throw to monkey ", "").trim());
+
         int ifFalse = Integer.parseInt(input.get(5).trim().replace("If false: throw to monkey ", "").trim());
+
         return new MonkeyBehaviour(startingItems, new Operation(operation), test, ifTrue, ifFalse, worryLevelManagingFactor);
     }
 
-    private MonkeyBehaviour(LinkedList<Item> startingItems, Operation operation, Predicate<BigDecimal> test, int ifTrue, int ifFalse, int worryLevelManagingFactor) {
-        this.startingItems = startingItems;
+    private MonkeyBehaviour(LinkedList<Item> items, Operation operation, Predicate<Number> test, int ifTrue, int ifFalse, int factorForWorryLevel) {
+        this.items = items;
         this.operation = operation;
         this.test = test;
         this.ifTrue = ifTrue;
         this.ifFalse = ifFalse;
-        this.worryLevelManagingFactor = worryLevelManagingFactor;
+        this.factorForWorryLevel = factorForWorryLevel;
     }
 
     public LinkedList<Item> startingItems() {
-        return startingItems;
-    }
-
-    public Operation operation() {
-        return operation;
+        return items;
     }
 
     public void throwToMonkey(Map<Integer, MonkeyBehaviour> monkeys) {
-        while (!startingItems.isEmpty()) {
-            Item item = startingItems.removeFirst();
-            item.value = operation.perform(item.value).divideToIntegralValue(BigDecimal.valueOf(worryLevelManagingFactor));
+        while (!items.isEmpty()) {
+            Item item = items.removeFirst();
+            operation.perform(item.value);
+            if (factorForWorryLevel != 1)
+                item.value.divide(factorForWorryLevel);
             int nextMonkey = test.test(item.value) ? ifTrue : ifFalse;
             item.visitedMonkeys.add(nextMonkey);
             MonkeyBehaviour monkeyBehaviour = monkeys.get(nextMonkey);
-            monkeyBehaviour.startingItems.addLast(item);
+            monkeyBehaviour.items.addLast(item);
         }
     }
 

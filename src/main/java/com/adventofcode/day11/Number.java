@@ -1,14 +1,15 @@
 package com.adventofcode.day11;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface Number {
 
-import static java.util.Optional.ofNullable;
+    void add(int add);
 
-public class Number {
-    private final Map<Integer, Integer> neededReminders = new HashMap<>();
+    void multiply(int multiply);
 
-    public Number(int input) {
-    }
+    void divide(int divideBy);
+
+    void square();
+
+    boolean isDivisibleBy(int divisior);
 }
 

@@ -23,8 +23,6 @@ class Day11Test {
 
     @Test
     void testPart2() throws IOException {
-        //13446482318 too high
-        //604214405 too low
-        assertEquals(0L, day11.part2());
+        assertEquals(12848882750L, day11.part2());
     }
 }
