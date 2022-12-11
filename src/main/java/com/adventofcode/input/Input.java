@@ -92,6 +92,10 @@ public class Input {
         return Integer.parseInt(line.replace("Monkey ", "").replace(":", ""));
     }
 
+    public static List<String> day12(String resourceName) throws IOException {
+        return getInputFromFile(resourceName);
+    }
+
     private static List<String> getInputFromFile(String resourceName) throws IOException {
         try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(Input.class.getResourceAsStream(resourceName)));
              BufferedReader reader = new BufferedReader(in)) {
