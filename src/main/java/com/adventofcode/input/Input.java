@@ -1,6 +1,7 @@
 package com.adventofcode.input;
 
 import com.adventofcode.day11.MonkeyBehaviour;
+import com.adventofcode.day13.ListValue;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
 
@@ -96,7 +97,19 @@ public class Input {
         return getInputFromFile(resourceName);
     }
 
-    public static List<String> day13(String resourceName) throws IOException {
+    public static List<ListValue[]> day13(String resourceName) throws IOException {
+        List<ListValue[]> packetsPairs = new ArrayList<>();
+        List<String> lines = getInputFromFile(resourceName);
+        for (int i = 0; i < lines.size(); i++) {
+            packetsPairs.add(new ListValue[]{
+                    ListValue.parse(lines.get(i++)),
+                    ListValue.parse(lines.get(i++))
+            });
+        }
+        return packetsPairs;
+    }
+
+    public static List<String> day14(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
