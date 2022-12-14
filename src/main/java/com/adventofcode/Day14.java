@@ -5,6 +5,7 @@ import com.adventofcode.input.Input;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
@@ -13,12 +14,11 @@ import java.util.stream.IntStream;
 
 public class Day14 {
 
+    public static final int NO_FLOOR = -1;
     private final List<XY> rocks;
     private final Map<XY, Character> map = new HashMap<>();
-    private final int minY;
-    private int maxY;
-    private int minX;
-    private int maxX;
+    private final int maxY;
+    private int floor = NO_FLOOR;
 
     public Day14() throws IOException {
         rocks = Input.day14("/day14");
@@ -32,9 +32,6 @@ public class Day14 {
             if (minY > r.y()) minY = r.y();
             if (maxY < r.y()) maxY = r.y();
         }
-        this.minX = minX;
-        this.maxX = maxX;
-        this.minY = minY;
         this.maxY = maxY;
     }
 
@@ -57,12 +54,7 @@ public class Day14 {
 
     long part2() throws IOException {
         initMap();
-        minX -= 1000;
-        maxX += 1000;
-        maxY += 2;
-        for(int x = minX; x <= maxX; x++){
-            map.put(new XY(x, maxY), '#');
-        }
+        floor = maxY + 1;
         int i = 0;
         while (simulateDrop(500, 0)) {
             i++;
@@ -72,14 +64,18 @@ public class Day14 {
     }
 
     private boolean simulateDrop(int x, int y) {
-        if (y > maxY) {
+        int max = Math.max(maxY, floor);
+        if (y > max) {
             return false;
         }
-        while (!map.containsKey(new XY(x, y + 1)) && y <= maxY) y++;
-        if (!map.containsKey(new XY(x - 1, y + 1))) {
+        while (isAir(x, y)) {
+            if (y > max) break;
+            y++;
+        }
+        if (isAir(x - 1, y)) {
             return simulateDrop(x - 1, y + 1);
         }
-        if (!map.containsKey(new XY(x + 1, y + 1))) {
+        if (isAir(x + 1, y)) {
             return simulateDrop(x + 1, y + 1);
         }
         if (map.containsKey(new XY(x, y))) return false;
@@ -87,9 +83,16 @@ public class Day14 {
         return true;
     }
 
+    private boolean isAir(int x, int y) {
+        return y != floor && !map.containsKey(new XY(x, y + 1));
+    }
+
     private String print() {
-        String toPrint = IntStream.range(Math.min(0, minY), maxY + 1)
-                .mapToObj(y -> IntStream.range(minX, maxX + 1).mapToObj(x -> map.getOrDefault(new XY(x, y), '.')).collect(Collector.of(
+        IntSummaryStatistics xStats = map.keySet().stream().mapToInt(XY::x).summaryStatistics();
+        IntSummaryStatistics yStats = map.keySet().stream().mapToInt(XY::y).summaryStatistics();
+
+        String toPrint = IntStream.range(Math.min(0, yStats.getMin()), yStats.getMax() + 1)
+                .mapToObj(y -> IntStream.range(xStats.getMin(), xStats.getMax() + 1).mapToObj(x -> map.getOrDefault(new XY(x, y), '.')).collect(Collector.of(
                         StringBuilder::new,
                         StringBuilder::append,
                         StringBuilder::append,
