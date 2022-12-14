@@ -2,16 +2,14 @@ package com.adventofcode.input;
 
 import com.adventofcode.day11.MonkeyBehaviour;
 import com.adventofcode.day13.ListValue;
+import com.adventofcode.day14.XY;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -109,7 +107,40 @@ public class Input {
         return packetsPairs;
     }
 
-    public static List<String> day14(String resourceName) throws IOException {
+    public static List<XY> day14(String resourceName) throws IOException {
+        return getInputFromFile(resourceName)
+                .stream()
+                .map(line -> line.split(" -> "))
+                .map(parts -> Arrays.stream(parts).map(XY::parse).toList())
+                .map(Input::generateStonePaths)
+                .flatMap(List::stream)
+                .toList();
+    }
+
+    private static List<XY> generateStonePaths(List<XY> paths) {
+        List<XY> rocks = new ArrayList<>();
+        for (int i = 1; i < paths.size(); i++) {
+            XY from = paths.get(i - 1);
+            XY to = paths.get(i);
+            rocks.addAll(generatePath(from, to));
+        }
+        return rocks;
+    }
+
+    private static List<XY> generatePath(XY from, XY to) {
+        if (from.x() == to.x()) {
+            return IntStream.range(Math.min(from.y(), to.y()), Math.max(from.y(), to.y()) + 1)
+                    .mapToObj(y -> new XY(from.x(), y))
+                    .toList();
+        } else if (from.y() == to.y()) {
+            return IntStream.range(Math.min(from.x(), to.x()), Math.max(from.x(), to.x()) + 1)
+                    .mapToObj(x -> new XY(x, from.y()))
+                    .toList();
+        }
+        throw new RuntimeException();
+    }
+
+    public static List<String> day15(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
