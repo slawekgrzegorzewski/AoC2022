@@ -1,6 +1,6 @@
 <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  2022 - 26 ⭐
+  2022 - 28 ⭐
 </h1>
 <a href="java">
   <img src="AoCTiles/media2022/2022/01.png" width="161px">
