@@ -8,4 +8,19 @@ public record XY(int x, int y) {
                 Integer.parseInt(parts[1])
         );
     }
+
+    public int manhattanDistance(XY other) {
+        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
+    }
+
+    public int[] findXsOfAllPointsInGivenDistance(int manhattanDistance, int y) {
+        int range = manhattanDistance - Math.abs(this.y - y);
+        if (range > 0) {
+            return new int[]{this.x() - range, this.x() + range};
+        }
+        if (range == 0) {
+            return new int[]{this.x()};
+        }
+        return new int[0];
+    }
 }

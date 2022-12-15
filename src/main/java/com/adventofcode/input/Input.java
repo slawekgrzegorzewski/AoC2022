@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -140,7 +142,23 @@ public class Input {
         throw new RuntimeException();
     }
 
-    public static List<String> day15(String resourceName) throws IOException {
+    public static List<XY[]> day15(String resourceName) throws IOException {
+        Pattern pattern = Pattern.compile("=(-?[0-9]*)");
+        return getInputFromFile(resourceName).stream()
+                .map(pattern::matcher)
+                .map(matcher -> {
+                    XY sensor = XY.parse(findAndGetNextGroup(matcher) + "," + findAndGetNextGroup(matcher));
+                    XY beacon = XY.parse(findAndGetNextGroup(matcher) + "," + findAndGetNextGroup(matcher));
+                    return new XY[]{sensor, beacon};
+                }).collect(Collectors.toList());
+    }
+
+    private static String findAndGetNextGroup(Matcher matcher) {
+        if (!matcher.find()) throw new RuntimeException();
+        return matcher.group(1);
+    }
+
+    public static List<String> day16(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 
