@@ -1,24 +1,17 @@
 package com.adventofcode.day16;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.adventofcode.day16.BFSColor.WHITE;
-
 public final class Valve {
     private final String label;
     private final int flowRate;
-    private final Map<Integer, Valve> reachableValves;
+    private final Map<Valve, Integer> reachableValves;
+    public boolean skipOpening = false;
     private boolean open = false;
 
-    public BFSColor bfsColor = WHITE;
-    public int distance = Integer.MAX_VALUE;
-    public Valve parent = null;
-    public int id = 0;
-
-    public Valve(String label, int flowRate, Map<Integer, Valve> reachableValves) {
+    public Valve(String label, int flowRate, Map<Valve, Integer> reachableValves) {
         this.label = label;
         this.flowRate = flowRate;
         this.reachableValves = reachableValves;
@@ -32,7 +25,7 @@ public final class Valve {
         return flowRate;
     }
 
-    public Map<Integer, Valve> reachableValves() {
+    public Map<Valve, Integer> reachableValves() {
         return reachableValves;
     }
 
@@ -40,34 +33,34 @@ public final class Valve {
         open = true;
     }
 
+    public void close() {
+        open = false;
+    }
+
     public boolean isOpen() {
         return open;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Valve) obj;
-        return Objects.equals(this.label, that.label) &&
-                this.flowRate == that.flowRate &&
-                Objects.equals(this.reachableValves, that.reachableValves);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Valve valve = (Valve) o;
+        return Objects.equals(label, valve.label);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(label);
+    }
 
     @Override
     public String toString() {
         return "Valve{" +
                 "label='" + label + '\'' +
                 ", flowRate=" + flowRate +
-                ", reachableValves=" + reachableValves.entrySet().stream().map(e -> e.getKey() + ":" + e.getValue().label()).collect(Collectors.joining(",")) +
+                ", reachableValves=" + reachableValves.entrySet().stream().map(e -> e.getValue() + ":" + e.getKey().label()).collect(Collectors.joining(",")) +
                 ", open=" + open +
                 '}';
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(label, flowRate, reachableValves);
-    }
-
 }

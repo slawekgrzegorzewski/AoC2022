@@ -171,20 +171,22 @@ public class Input {
                 matcher = pattern2.matcher(line);
                 matcher.find();
             }
-            valves.put(matcher.group(1), new Valve(matcher.group(1), Integer.parseInt(matcher.group(2)), new ArrayList<>()));
+            valves.put(matcher.group(1), new Valve(matcher.group(1), Integer.parseInt(matcher.group(2)), new HashMap<>()));
             reachableValves.put(matcher.group(1), matcher.group(3).split(", "));
         }
         for (Map.Entry<String, Valve> entry : valves.entrySet()) {
             String label = entry.getKey();
             Valve valve = entry.getValue();
-            List<Valve> valves1
-                    = valve.reachableValves();
             for (String s : reachableValves.get(label)) {
                 Valve valve1 = valves.get(s);
-                valves1.add(valve1);
+                valve.reachableValves().put(valve1, 1);
             }
         }
         return valves;
+    }
+
+    public static List<String> day17(String resourceName) throws IOException {
+        return getInputFromFile(resourceName);
     }
 
     private static List<String> getInputFromFile(String resourceName) throws IOException {
