@@ -3,6 +3,7 @@ package com.adventofcode.input;
 import com.adventofcode.day11.MonkeyBehaviour;
 import com.adventofcode.day13.ListValue;
 import com.adventofcode.day14.XY;
+import com.adventofcode.day16.Valve;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
 
@@ -158,8 +159,32 @@ public class Input {
         return matcher.group(1);
     }
 
-    public static List<String> day16(String resourceName) throws IOException {
-        return getInputFromFile(resourceName);
+    public static Map<String, Valve> day16(String resourceName) throws IOException {
+        List<String> lines = getInputFromFile(resourceName);
+        Map<String, String[]> reachableValves = new HashMap<>();
+        Map<String, Valve> valves = new HashMap<>();
+        Pattern pattern = Pattern.compile("Valve ([A-Z][A-Z]) has flow rate=([0-9]+); tunnels lead to valves (.*)");
+        Pattern pattern2 = Pattern.compile("Valve ([A-Z][A-Z]) has flow rate=([0-9]+); tunnel leads to valve (.*)");
+        for (String line : lines) {
+            Matcher matcher = pattern.matcher(line);
+            if (!matcher.find()) {
+                matcher = pattern2.matcher(line);
+                matcher.find();
+            }
+            valves.put(matcher.group(1), new Valve(matcher.group(1), Integer.parseInt(matcher.group(2)), new ArrayList<>()));
+            reachableValves.put(matcher.group(1), matcher.group(3).split(", "));
+        }
+        for (Map.Entry<String, Valve> entry : valves.entrySet()) {
+            String label = entry.getKey();
+            Valve valve = entry.getValue();
+            List<Valve> valves1
+                    = valve.reachableValves();
+            for (String s : reachableValves.get(label)) {
+                Valve valve1 = valves.get(s);
+                valves1.add(valve1);
+            }
+        }
+        return valves;
     }
 
     private static List<String> getInputFromFile(String resourceName) throws IOException {

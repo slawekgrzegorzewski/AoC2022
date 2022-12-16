@@ -83,8 +83,9 @@ public class Day12 {
         while (!remainingNodes.isEmpty()) {
             Node closestNode = findNodeWithLowestDist(remainingNodes, distances);
             remainingNodes.remove(closestNode);
+            if (getValueForNode(closestNode, distances) == Integer.MAX_VALUE) break;
             for (Node nodeNextToClosestOne : closestNode.nodes()) {
-                if (remainingNodes.contains(nodeNextToClosestOne) && getValueForNode(closestNode, distances) != Integer.MAX_VALUE) {
+                if (remainingNodes.contains(nodeNextToClosestOne)) {
                     int alt = getValueForNode(closestNode, distances) + 1;
                     if (alt < getValueForNode(nodeNextToClosestOne, distances)) {
                         setValueForNode(nodeNextToClosestOne, distances, alt);
