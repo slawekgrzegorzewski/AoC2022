@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class Input {
 
@@ -132,11 +133,11 @@ public class Input {
 
     private static List<XY> generatePath(XY from, XY to) {
         if (from.x() == to.x()) {
-            return IntStream.range(Math.min(from.y(), to.y()), Math.max(from.y(), to.y()) + 1)
+            return LongStream.range(Math.min(from.y(), to.y()), Math.max(from.y(), to.y()) + 1)
                     .mapToObj(y -> new XY(from.x(), y))
                     .toList();
         } else if (from.y() == to.y()) {
-            return IntStream.range(Math.min(from.x(), to.x()), Math.max(from.x(), to.x()) + 1)
+            return LongStream.range(Math.min(from.x(), to.x()), Math.max(from.x(), to.x()) + 1)
                     .mapToObj(x -> new XY(x, from.y()))
                     .toList();
         }
@@ -185,7 +186,21 @@ public class Input {
         return valves;
     }
 
-    public static List<String> day17(String resourceName) throws IOException {
+    public static List<Character> day17(String resourceName) throws IOException {
+        return getInputFromFile(resourceName).stream()
+                .map(String::toCharArray)
+                .map(chars -> {
+                    ArrayList<Character> asList = new ArrayList<>();
+                    for (char aChar : chars) {
+                        asList.add(aChar);
+                    }
+                    return asList;
+                })
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> day18(String resourceName) throws IOException {
         return getInputFromFile(resourceName);
     }
 

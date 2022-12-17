@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class Range implements Comparable<Range> {
-    private final int fromInclusive;
-    private final int toInclusive;
+    private final long fromInclusive;
+    private final long toInclusive;
 
     public static Range parse(String s) {
         String[] range = s.split("-");
@@ -23,28 +23,28 @@ public class Range implements Comparable<Range> {
                 .orElse(false);
     }
 
-    public static boolean rangesDontContain(Set<Range> excludes, int value) {
+    public static boolean rangesDontContain(Set<Range> excludes, long value) {
         return excludes.stream().noneMatch(r -> r.containsValue(value));
     }
 
-    public Range(int fromInclusive, int toInclusive) {
+    public Range(long fromInclusive, long toInclusive) {
         this.fromInclusive = fromInclusive;
         this.toInclusive = toInclusive;
     }
 
-    public int fromInclusive() {
+    public long fromInclusive() {
         return fromInclusive;
     }
 
-    public int toInclusive() {
+    public long toInclusive() {
         return toInclusive;
     }
 
-    public int size() {
+    public long size() {
         return toInclusive - fromInclusive + 1;
     }
 
-    public boolean containsValue(int value) {
+    public boolean containsValue(long value) {
         return getCommonPart(new Range(value, value)).isPresent();
     }
 
@@ -53,8 +53,8 @@ public class Range implements Comparable<Range> {
     }
 
     public Optional<Range> getCommonPart(Range other) {
-        int from = Math.max(fromInclusive, other.fromInclusive);
-        int to = Math.min(toInclusive, other.toInclusive);
+        long from = Math.max(fromInclusive, other.fromInclusive);
+        long to = Math.min(toInclusive, other.toInclusive);
         if (to >= from) {
             return Optional.of(new Range(from, to));
         }
@@ -107,6 +107,6 @@ public class Range implements Comparable<Range> {
     @Override
     public int compareTo(@NotNull Range o) {
         if (getCommonPart(o).isPresent()) throw new RuntimeException();
-        return this.fromInclusive - o.toInclusive;
+        return Long.compare(this.fromInclusive, o.toInclusive);
     }
 }

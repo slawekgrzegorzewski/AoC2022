@@ -1,6 +1,6 @@
 package com.adventofcode.day14;
 
-public record XY(int x, int y) {
+public record XY(long x, long y) {
     public static XY parse(String value) {
         String[] parts = value.split(",");
         return new XY(
@@ -9,18 +9,30 @@ public record XY(int x, int y) {
         );
     }
 
-    public int manhattanDistance(XY other) {
+    public long manhattanDistance(XY other) {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
 
-    public int[] findXsOfAllPointsInGivenDistance(int manhattanDistance, int y) {
-        int range = manhattanDistance - Math.abs(this.y - y);
+    public long[] findXsOfAllPointsInGivenDistance(long manhattanDistance, long y) {
+        long range = manhattanDistance - Math.abs(this.y - y);
         if (range > 0) {
-            return new int[]{this.x() - range, this.x() + range};
+            return new long[]{this.x() - range, this.x() + range};
         }
         if (range == 0) {
-            return new int[]{this.x()};
+            return new long[]{this.x()};
         }
-        return new int[0];
+        return new long[0];
+    }
+
+    public XY moveLeft() {
+        return new XY(x(), y() - 1);
+    }
+
+    public XY moveRight() {
+        return new XY(x(), y() + 1);
+    }
+
+    public XY moveDown() {
+        return new XY(x() - 1, y());
     }
 }

@@ -5,27 +5,27 @@ import com.adventofcode.input.Input;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class Day14 {
 
-    public static final int NO_FLOOR = -1;
+    public static final long NO_FLOOR = -1;
     private final List<XY> rocks;
     private final Map<XY, Character> map = new HashMap<>();
-    private final int maxY;
-    private int floor = NO_FLOOR;
+    private final long maxY;
+    private long floor = NO_FLOOR;
 
     public Day14() throws IOException {
         rocks = Input.day14("/day14");
-        int minY = Integer.MAX_VALUE;
-        int maxY = 0;
-        int minX = Integer.MAX_VALUE;
-        int maxX = 0;
+        long minY = Integer.MAX_VALUE;
+        long maxY = 0;
+        long minX = Integer.MAX_VALUE;
+        long maxX = 0;
         for (XY r : rocks) {
             if (minX > r.x()) minX = r.x();
             if (maxX < r.x()) maxX = r.x();
@@ -64,7 +64,7 @@ public class Day14 {
     }
 
     private boolean simulateDrop(int x, int y) {
-        int max = Math.max(maxY, floor);
+        long max = Math.max(maxY, floor);
         if (y > max) {
             return false;
         }
@@ -88,11 +88,11 @@ public class Day14 {
     }
 
     private String print() {
-        IntSummaryStatistics xStats = map.keySet().stream().mapToInt(XY::x).summaryStatistics();
-        IntSummaryStatistics yStats = map.keySet().stream().mapToInt(XY::y).summaryStatistics();
+        LongSummaryStatistics xStats = map.keySet().stream().mapToLong(XY::x).summaryStatistics();
+        LongSummaryStatistics yStats = map.keySet().stream().mapToLong(XY::y).summaryStatistics();
 
-        String toPrint = IntStream.range(Math.min(0, yStats.getMin()), yStats.getMax() + 1)
-                .mapToObj(y -> IntStream.range(xStats.getMin(), xStats.getMax() + 1).mapToObj(x -> map.getOrDefault(new XY(x, y), '.')).collect(Collector.of(
+        String toPrint = LongStream.range(Math.min(0, yStats.getMin()), yStats.getMax() + 1)
+                .mapToObj(y -> LongStream.range(xStats.getMin(), xStats.getMax() + 1).mapToObj(x -> map.getOrDefault(new XY(x, y), '.')).collect(Collector.of(
                         StringBuilder::new,
                         StringBuilder::append,
                         StringBuilder::append,
