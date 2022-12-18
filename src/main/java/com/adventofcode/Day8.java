@@ -16,7 +16,7 @@ public class Day8 {
 
 
     public Day8() throws IOException {
-        mapTree = Input.day8("/day8");
+        mapTree = Input.day8();
         int[][] maxHeightFromRight = new int[mapTree.length][mapTree[0].length];
         int[][] maxHeightFromBottom = new int[mapTree.length][mapTree[0].length];
         mapOfHiddenTrees = new boolean[mapTree.length][mapTree[0].length];

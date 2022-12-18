@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.adventofcode.day12.TraversingDirection.DOWN;
 import static com.adventofcode.day12.TraversingDirection.UP;
@@ -18,7 +17,7 @@ public class Day12 {
     private final List<String> input;
 
     public Day12() throws IOException {
-        input = Input.day12("/day12");
+        input = Input.day12();
     }
 
     long part1() throws IOException {

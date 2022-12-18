@@ -16,7 +16,7 @@ public class Day7 {
     private final Dir root;
 
     public Day7() throws IOException {
-        List<String> input = Input.day7("/day7");
+        List<String> input = Input.day7();
         Dir currentDir = null;
         for (Command command : new Interpreter(input).commands()) {
             currentDir = command.execute(currentDir);

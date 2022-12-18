@@ -13,7 +13,7 @@ public class Day6 {
     private final String input;
 
     public Day6() throws IOException {
-        input = Input.day6("/day6");
+        input = Input.day6();
     }
 
     int part1() {

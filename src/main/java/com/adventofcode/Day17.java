@@ -18,7 +18,7 @@ public class Day17 {
     private final List<Character> input;
 
     public Day17() throws IOException {
-        input = Input.day17("/day17");
+        input = Input.day17();
 //        checkShapes();
     }
 

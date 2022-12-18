@@ -13,7 +13,7 @@ public class Day15 {
     private final List<XY[]> input;
 
     public Day15() throws IOException {
-        input = Input.day15("/day15");
+        input = Input.day15();
     }
 
     long part1() throws IOException {

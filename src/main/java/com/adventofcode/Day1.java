@@ -15,7 +15,7 @@ public class Day1 {
     }
 
     public Day1() throws IOException {
-        this.calories = Input.day1("/day1");
+        this.calories = Input.day1();
     }
 
     int part1() {

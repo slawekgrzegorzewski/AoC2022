@@ -15,7 +15,7 @@ public class Day13 {
     private final List<ListValue[]> packets;
 
     public Day13() throws IOException {
-        packets = Input.day13("/day13");
+        packets = Input.day13();
     }
 
     long part1() throws IOException {

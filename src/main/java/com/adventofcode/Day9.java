@@ -16,7 +16,7 @@ public class Day9 {
     private final List<Move> input;
 
     public Day9() throws IOException {
-        input = Input.day9("/day9");
+        input = Input.day9();
     }
 
     long part1() {

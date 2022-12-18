@@ -21,7 +21,7 @@ public class Day14 {
     private long floor = NO_FLOOR;
 
     public Day14() throws IOException {
-        rocks = Input.day14("/day14");
+        rocks = Input.day14();
         long minY = Integer.MAX_VALUE;
         long maxY = 0;
         long minX = Integer.MAX_VALUE;
@@ -87,7 +87,7 @@ public class Day14 {
         return y != floor && !map.containsKey(new XY(x, y + 1));
     }
 
-    private String print() {
+    private void print() {
         LongSummaryStatistics xStats = map.keySet().stream().mapToLong(XY::x).summaryStatistics();
         LongSummaryStatistics yStats = map.keySet().stream().mapToLong(XY::y).summaryStatistics();
 
@@ -100,6 +100,5 @@ public class Day14 {
                 )))
                 .collect(Collectors.joining("\n"));
         System.out.println(toPrint);
-        return toPrint;
     }
 }

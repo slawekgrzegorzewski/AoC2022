@@ -11,7 +11,7 @@ public class Day16 {
     private final Map<String, Valve> valvesSystem;
 
     public Day16() throws IOException {
-        valvesSystem = Input.day16("/day16");
+        valvesSystem = Input.day16();
         compactGraph();
     }
 

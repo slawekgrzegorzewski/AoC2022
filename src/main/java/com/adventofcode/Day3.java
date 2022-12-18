@@ -12,7 +12,7 @@ public class Day3 {
     private final List<String> input;
 
     public Day3() throws IOException {
-        input = Input.day3("/day3");
+        input = Input.day3();
     }
 
     int part1() {

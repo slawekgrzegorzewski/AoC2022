@@ -14,12 +14,12 @@ public class Day11 {
     private Map<Integer, MonkeyBehaviour> monkeys;
 
     long part1() throws IOException {
-        monkeys = Input.day11("/day11", 3);
+        monkeys = Input.day11(3);
         return rounds(20);
     }
 
     long part2() throws IOException {
-        monkeys = Input.day11("/day11", 1);
+        monkeys = Input.day11(1);
         return rounds(10_000);
     }
 

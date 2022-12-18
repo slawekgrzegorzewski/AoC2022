@@ -18,7 +18,7 @@ public class Day5 {
     private final List<Move> moves;
 
     public Day5() throws IOException {
-        List<String> input = Input.day5("/day5");
+        List<String> input = Input.day5();
 
         final int splitIndex = input.indexOf("");
         final int numberOfCrates = Integer.parseInt(input.get(splitIndex - 1).substring(input.get(splitIndex - 1).lastIndexOf(' ') + 1));

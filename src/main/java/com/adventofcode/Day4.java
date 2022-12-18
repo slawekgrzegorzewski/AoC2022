@@ -12,7 +12,7 @@ public class Day4 {
     private final List<Pair<Range, Range>> input;
 
     public Day4() throws IOException {
-        input = Input.day4("/day4");
+        input = Input.day4();
     }
 
     int part1() {
