@@ -5,6 +5,7 @@ import com.adventofcode.day13.ListValue;
 import com.adventofcode.day14.XY;
 import com.adventofcode.day16.Valve;
 import com.adventofcode.day18.XYZ;
+import com.adventofcode.day19.Blueprint;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
 
@@ -35,10 +36,7 @@ public class Input {
     }
 
     public static List<String[]> day2() throws IOException {
-        return getInputFromFile("/day2")
-                .stream()
-                .map(line -> line.split(" "))
-                .collect(Collectors.toList());
+        return getInputFromFile("/day2").stream().map(line -> line.split(" ")).collect(Collectors.toList());
     }
 
     public static List<String> day3() throws IOException {
@@ -46,11 +44,7 @@ public class Input {
     }
 
     public static List<Pair<Range, Range>> day4() throws IOException {
-        return getInputFromFile("/day4")
-                .stream()
-                .map(line -> line.split(","))
-                .map(ranges -> new Pair<>(Range.parse(ranges[0]), Range.parse(ranges[1])))
-                .collect(Collectors.toList());
+        return getInputFromFile("/day4").stream().map(line -> line.split(",")).map(ranges -> new Pair<>(Range.parse(ranges[0]), Range.parse(ranges[1]))).collect(Collectors.toList());
     }
 
     public static List<String> day5() throws IOException {
@@ -66,16 +60,11 @@ public class Input {
     }
 
     public static int[][] day8() throws IOException {
-        return getInputFromFile("/day8").stream()
-                .map(line -> line.chars().map(c -> Integer.parseInt(String.valueOf((char) c))).toArray())
-                .toArray(int[][]::new);
+        return getInputFromFile("/day8").stream().map(line -> line.chars().map(c -> Integer.parseInt(String.valueOf((char) c))).toArray()).toArray(int[][]::new);
     }
 
     public static List<Move> day9() throws IOException {
-        return getInputFromFile("/day9").stream()
-                .map(line -> line.split(" "))
-                .map(parts -> new Move(Move.Direction.valueOf(parts[0]), Integer.parseInt(parts[1])))
-                .collect(Collectors.toList());
+        return getInputFromFile("/day9").stream().map(line -> line.split(" ")).map(parts -> new Move(Move.Direction.valueOf(parts[0]), Integer.parseInt(parts[1]))).collect(Collectors.toList());
     }
 
     public static List<String> day10(String resourceName) throws IOException {
@@ -84,12 +73,7 @@ public class Input {
 
     public static Map<Integer, MonkeyBehaviour> day11(int worryLevelManagingFactor) throws IOException {
         List<String> lines = getInputFromFile("/day11");
-        return IntStream.iterate(0, i -> i < lines.size(), i -> i + 7)
-                .mapToObj(i -> lines.subList(i, i + 6))
-                .collect(Collectors.toMap(
-                        list -> monkeyIndex(list.get(0)),
-                        list -> MonkeyBehaviour.parse(list, worryLevelManagingFactor, monkeyIndex(list.get(0)))
-                ));
+        return IntStream.iterate(0, i -> i < lines.size(), i -> i + 7).mapToObj(i -> lines.subList(i, i + 6)).collect(Collectors.toMap(list -> monkeyIndex(list.get(0)), list -> MonkeyBehaviour.parse(list, worryLevelManagingFactor, monkeyIndex(list.get(0)))));
     }
 
     private static int monkeyIndex(String line) {
@@ -104,22 +88,13 @@ public class Input {
         List<ListValue[]> packetsPairs = new ArrayList<>();
         List<String> lines = getInputFromFile("/day13");
         for (int i = 0; i < lines.size(); i++) {
-            packetsPairs.add(new ListValue[]{
-                    ListValue.parse(lines.get(i++)),
-                    ListValue.parse(lines.get(i++))
-            });
+            packetsPairs.add(new ListValue[]{ListValue.parse(lines.get(i++)), ListValue.parse(lines.get(i++))});
         }
         return packetsPairs;
     }
 
     public static List<XY> day14() throws IOException {
-        return getInputFromFile("/day14")
-                .stream()
-                .map(line -> line.split(" -> "))
-                .map(parts -> Arrays.stream(parts).map(XY::parse).toList())
-                .map(Input::generateStonePaths)
-                .flatMap(List::stream)
-                .toList();
+        return getInputFromFile("/day14").stream().map(line -> line.split(" -> ")).map(parts -> Arrays.stream(parts).map(XY::parse).toList()).map(Input::generateStonePaths).flatMap(List::stream).toList();
     }
 
     private static List<XY> generateStonePaths(List<XY> paths) {
@@ -134,26 +109,20 @@ public class Input {
 
     private static List<XY> generatePath(XY from, XY to) {
         if (from.x() == to.x()) {
-            return LongStream.range(Math.min(from.y(), to.y()), Math.max(from.y(), to.y()) + 1)
-                    .mapToObj(y -> new XY(from.x(), y))
-                    .toList();
+            return LongStream.range(Math.min(from.y(), to.y()), Math.max(from.y(), to.y()) + 1).mapToObj(y -> new XY(from.x(), y)).toList();
         } else if (from.y() == to.y()) {
-            return LongStream.range(Math.min(from.x(), to.x()), Math.max(from.x(), to.x()) + 1)
-                    .mapToObj(x -> new XY(x, from.y()))
-                    .toList();
+            return LongStream.range(Math.min(from.x(), to.x()), Math.max(from.x(), to.x()) + 1).mapToObj(x -> new XY(x, from.y())).toList();
         }
         throw new RuntimeException();
     }
 
     public static List<XY[]> day15() throws IOException {
         Pattern pattern = Pattern.compile("=(-?[0-9]*)");
-        return getInputFromFile("/day15").stream()
-                .map(pattern::matcher)
-                .map(matcher -> {
-                    XY sensor = XY.parse(findAndGetNextGroup(matcher) + "," + findAndGetNextGroup(matcher));
-                    XY beacon = XY.parse(findAndGetNextGroup(matcher) + "," + findAndGetNextGroup(matcher));
-                    return new XY[]{sensor, beacon};
-                }).collect(Collectors.toList());
+        return getInputFromFile("/day15").stream().map(pattern::matcher).map(matcher -> {
+            XY sensor = XY.parse(findAndGetNextGroup(matcher) + "," + findAndGetNextGroup(matcher));
+            XY beacon = XY.parse(findAndGetNextGroup(matcher) + "," + findAndGetNextGroup(matcher));
+            return new XY[]{sensor, beacon};
+        }).collect(Collectors.toList());
     }
 
     private static String findAndGetNextGroup(Matcher matcher) {
@@ -188,30 +157,25 @@ public class Input {
     }
 
     public static List<Character> day17() throws IOException {
-        return getInputFromFile("/day17").stream()
-                .map(String::toCharArray)
-                .map(chars -> {
-                    ArrayList<Character> asList = new ArrayList<>();
-                    for (char aChar : chars) {
-                        asList.add(aChar);
-                    }
-                    return asList;
-                })
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        return getInputFromFile("/day17").stream().map(String::toCharArray).map(chars -> {
+            ArrayList<Character> asList = new ArrayList<>();
+            for (char aChar : chars) {
+                asList.add(aChar);
+            }
+            return asList;
+        }).flatMap(List::stream).collect(Collectors.toList());
     }
 
     public static List<XYZ> day18() throws IOException {
         return getInputFromFile("/day18").stream().map(XYZ::parse).collect(Collectors.toList());
     }
 
-    public static List<String> day19() throws IOException {
-        return getInputFromFile("/day19");
+    public static List<Blueprint> day19() throws IOException {
+        return getInputFromFile("/day19").stream().map(Blueprint::parse).collect(Collectors.toList());
     }
 
     private static List<String> getInputFromFile(String resourceName) throws IOException {
-        try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(Input.class.getResourceAsStream(resourceName)));
-             BufferedReader reader = new BufferedReader(in)) {
+        try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(Input.class.getResourceAsStream(resourceName))); BufferedReader reader = new BufferedReader(in)) {
             return reader.lines().collect(Collectors.toList());
         }
     }
