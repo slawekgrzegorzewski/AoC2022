@@ -18,13 +18,11 @@ class Day20Test {
 
     @Test
     void testPart1() throws IOException {
-        //10791 too high
-        //1837 too low
-        assertEquals(0L, day20.part1());
+        assertEquals(7584L, day20.part1());
     }
 
     @Test
     void testPart2() throws IOException {
-        assertEquals(0L, day20.part2());
+        assertEquals(4907679608191L, day20.part2());
     }
 }
