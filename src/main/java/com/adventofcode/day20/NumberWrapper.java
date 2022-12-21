@@ -1,10 +1,9 @@
 package com.adventofcode.day20;
 
-public record NumberWrapper(int value) {
+public record NumberWrapper(long value) {
 
     @Override
     public String toString() {
         return String.valueOf(value);
-
     }
 }

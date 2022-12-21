@@ -31,7 +31,24 @@ public class CircularListElement {
         return this;
     }
 
-    public void moveNext() {
+    public void moveNext(long steps) {
+        for (long i = 0; i < steps; i++) {
+            moveNextSingle();
+        }
+    }
+
+    public void moveBack(long steps) {
+        for (long i = 0; i < steps; i++) {
+            moveBackSingle();
+        }
+    }
+
+    public void move(long steps) {
+        if (steps > 0) moveNext(steps);
+        if (steps < 0) moveBack(-steps);
+    }
+
+    private void moveNextSingle() {
         CircularListElement previous = previous();
         CircularListElement next = next();
         CircularListElement nextNext = next().next();
@@ -44,7 +61,7 @@ public class CircularListElement {
         nextNext.setPrevious(this);
     }
 
-    public void moveBack() {
+    private void moveBackSingle() {
         CircularListElement previousPrevious = previous().previous();
         CircularListElement previous = previous();
         CircularListElement next = next();
@@ -55,5 +72,13 @@ public class CircularListElement {
         previous.setPrevious(this);
         previous.setNext(next);
         next.setPrevious(previous);
+    }
+
+    public CircularListElement skipNext(int steps) {
+        CircularListElement result = this;
+        for (int i = 0; i < steps; i++) {
+            result = result.next();
+        }
+        return result;
     }
 }
