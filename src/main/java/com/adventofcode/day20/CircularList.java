@@ -21,17 +21,13 @@ public class CircularList {
 
     public void mix() {
         for (CircularListElement circularListElement : elements) {
-            long steps = circularListElement.value();
-            boolean forward = steps > 0;
-            steps = Math.abs(steps);
-            while (steps >= elements.size())
-                steps = steps % 5000L + steps / 5000L;
-            if (forward) {
-                for (int i = 0; i < Math.abs(steps); i++) {
+            long steps = Math.abs(circularListElement.value()) % (elements.size() - 1);
+            if (circularListElement.value() > 0) {
+                for (int i = 0; i < steps; i++) {
                     circularListElement.moveNext();
                 }
             } else {
-                for (int i = 0; i < Math.abs(steps); i++) {
+                for (int i = 0; i < steps; i++) {
                     circularListElement.moveBack();
                 }
             }
