@@ -6,6 +6,8 @@ import com.adventofcode.day14.XY;
 import com.adventofcode.day16.Valve;
 import com.adventofcode.day18.XYZ;
 import com.adventofcode.day19.Blueprint;
+import com.adventofcode.day20.NumberWrapper;
+import com.adventofcode.day21.Expression;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
 
@@ -172,6 +174,25 @@ public class Input {
 
     public static List<Blueprint> day19() throws IOException {
         return getInputFromFile("/day19").stream().map(Blueprint::parse).collect(Collectors.toList());
+    }
+
+    public static List<NumberWrapper> day20() throws IOException {
+        return getInputFromFile("/day20").stream().map(Integer::parseInt).map(NumberWrapper::new).collect(Collectors.toList());
+    }
+
+    public static Map<String, Expression> day21() throws IOException {
+        Pattern pattern = Pattern.compile("^([a-z]+): (.*)$");
+        return getInputFromFile("/day21").stream()
+                .map(pattern::matcher)
+                .peek(Matcher::find)
+                .collect(Collectors.toMap(
+                        m -> m.group(1),
+                        m -> Expression.parse(m.group(2))
+                ));
+    }
+
+    public static List<String> day22() throws IOException {
+        return getInputFromFile("/day22");
     }
 
     private static List<String> getInputFromFile(String resourceName) throws IOException {
