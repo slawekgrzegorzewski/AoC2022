@@ -21,16 +21,7 @@ public class CircularList {
 
     public void mix() {
         for (CircularListElement circularListElement : elements) {
-            long steps = Math.abs(circularListElement.value()) % (elements.size() - 1);
-            if (circularListElement.value() > 0) {
-                for (int i = 0; i < steps; i++) {
-                    circularListElement.moveNext();
-                }
-            } else {
-                for (int i = 0; i < steps; i++) {
-                    circularListElement.moveBack();
-                }
-            }
+            circularListElement.move(circularListElement.value() % (elements.size() - 1));
         }
     }
 
@@ -38,9 +29,7 @@ public class CircularList {
         CircularListElement circularListElement = elements.stream().filter(e -> e.value() == 0).findFirst().orElseThrow();
         long sum = 0;
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 1000; j++) {
-                circularListElement = circularListElement.next();
-            }
+            circularListElement = circularListElement.skipNext(1000);
             sum += circularListElement.value();
         }
         return sum;

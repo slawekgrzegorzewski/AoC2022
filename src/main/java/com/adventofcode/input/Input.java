@@ -179,7 +179,7 @@ public class Input {
     }
 
     public static List<NumberWrapper> day20() throws IOException {
-        return getInputFromFile("/day20").stream().map(Integer::parseInt).map(NumberWrapper::new).collect(Collectors.toList());
+        return getInputFromFile("/day20").stream().map(Long::parseLong).map(NumberWrapper::new).collect(Collectors.toList());
     }
 
     public static Map<String, Expression> day21() throws IOException {

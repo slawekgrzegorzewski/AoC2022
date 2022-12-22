@@ -16,13 +16,13 @@ public class Day20 {
     }
 
     long part1() throws IOException {
-        CircularList circularList = CircularList.copyOf(numbers.stream().map(NumberWrapper::value).map(i -> (long) i).collect(Collectors.toList()));
+        CircularList circularList = CircularList.copyOf(numbers.stream().map(NumberWrapper::value).collect(Collectors.toList()));
         circularList.mix();
         return circularList.sum();
     }
 
     long part2() throws IOException {
-        CircularList circularList = CircularList.copyOf(numbers.stream().map(NumberWrapper::value).map(i -> (long) i * 811589153L).collect(Collectors.toList()));
+        CircularList circularList = CircularList.copyOf(numbers.stream().map(NumberWrapper::value).map(l -> l * 811589153L).collect(Collectors.toList()));
         for (int i = 0; i < 10; i++) {
             circularList.mix();
         }
