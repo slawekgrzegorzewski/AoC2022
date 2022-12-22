@@ -35,4 +35,24 @@ public record XY(long x, long y) {
     public XY moveDown() {
         return new XY(x() - 1, y());
     }
+
+    public XY moveUp() {
+        return new XY(x() + 1, y());
+    }
+
+    public XY moveLeft2() {
+        return new XY(x() - 1, y());
+    }
+
+    public XY moveRight2() {
+        return new XY(x() + 1, y());
+    }
+
+    public XY moveDown2() {
+        return new XY(x(), y() + 1);
+    }
+
+    public XY moveUp2() {
+        return new XY(x(), y() - 1);
+    }
 }

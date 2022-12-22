@@ -8,8 +8,10 @@ import com.adventofcode.day18.XYZ;
 import com.adventofcode.day19.Blueprint;
 import com.adventofcode.day20.NumberWrapper;
 import com.adventofcode.day21.Expression;
+import com.adventofcode.day22.Instruction;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
+import com.google.common.base.Strings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -191,8 +193,29 @@ public class Input {
                 ));
     }
 
-    public static List<String> day22() throws IOException {
-        return getInputFromFile("/day22");
+    public static Instruction day22() throws IOException {
+        List<String> inputFromFile = getInputFromFile("/day22");
+        Map<XY, Character> map = new HashMap<>();
+        for (int y = 0; y < inputFromFile.size() - 2; y++) {
+            String line = inputFromFile.get(y);
+            char[] chars = line.toCharArray();
+            for (int x = 0; x < chars.length; x++) {
+                char aChar = chars[x];
+                if (aChar == ' ') continue;
+                map.put(new XY(x + 1, y + 1), aChar);
+            }
+        }
+        List<String> commands = new ArrayList<>();
+        Pattern pattern = Pattern.compile("([0-9]+)(R|L*)");
+        Matcher matcher = pattern.matcher(inputFromFile.get(inputFromFile.size() - 1));
+        while (matcher.find()) {
+            commands.add(matcher.group(1));
+            if (matcher.groupCount() > 1) {
+                if (!Strings.isNullOrEmpty(matcher.group(2)))
+                    commands.add(matcher.group(2));
+            }
+        }
+        return new Instruction(map, commands);
     }
 
     private static List<String> getInputFromFile(String resourceName) throws IOException {
