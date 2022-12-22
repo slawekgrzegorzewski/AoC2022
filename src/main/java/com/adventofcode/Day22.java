@@ -1,29 +1,26 @@
 package com.adventofcode;
 
 import com.adventofcode.day14.XY;
+import com.adventofcode.day22.Direction;
 import com.adventofcode.day22.Instruction;
+import com.adventofcode.day22.Position;
 import com.adventofcode.input.Input;
-import com.adventofcode.input.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+
+import static com.adventofcode.day22.Direction.*;
 
 public class Day22 {
     private final static Pattern NUMBER = Pattern.compile("[0-9]+");
     private final Instruction input;
     private final LongSummaryStatistics xStats;
     private final LongSummaryStatistics yStats;
-
-    private static final Map<Character, Integer> DIRECTIONS = Map.of(
-            '>', 0,
-            'v', 1,
-            '<', 2,
-            '^', 3
-    );
 
     private static final Map<Character, List<XY>> WALLS = Map.of(
             'A', List.of(new XY(51, 1), new XY(100, 50)),
@@ -41,177 +38,141 @@ public class Day22 {
     }
 
     long part1() throws IOException {
-        int facing = 0;
-        long x = input.map().entrySet().stream()
-                .filter(e -> e.getValue().equals('.'))
-                .map(Map.Entry::getKey)
-                .filter(e -> e.y() == 1)
-                .mapToLong(XY::x)
-                .min().orElseThrow();
-        XY currentPosition = new XY(x, 1);
-        input.map().put(currentPosition, getFacingChar(facing));
-        for (String instruction : input.instructions()) {
-            if (NUMBER.matcher(instruction).matches()) {
-                Pair<XY, Integer> move = move(currentPosition, Long.parseLong(instruction), facing);
-                currentPosition = move.first();
-                facing = move.second();
-            } else {
-                if (instruction.equals("L")) facing--;
-                if (instruction.equals("R")) facing++;
-                if (facing == -1) facing = 3;
-                if (facing == 4) facing = 0;
-                input.map().put(currentPosition, getFacingChar(facing));
-            }
-        }
-        return 1000L * currentPosition.y() + 4 * currentPosition.x() + facing;
-    }
-
-    private Pair<XY, Integer> move(XY currentPosition, long steps, int facing) {
-        XY next = currentPosition;
-        while (steps-- > 0) {
-            XY previous = next;
-            int previousFacing = facing;
-            Pair<XY, Integer> nextTile = getNextTile(next, facing);
-            next = nextTile.first();
-            facing = nextTile.second();
-            if (input.map().getOrDefault(next, ' ').equals('#')) return new Pair<>(previous, previousFacing);
-            input.map().put(next, getFacingChar(facing));
-        }
-        return new Pair<>(next, facing);
-    }
-
-    private Pair<XY, Integer> getNextTile(XY currentPosition, int facing) {
-        if (facing == 0) {
-            if (input.map().containsKey(currentPosition.moveRight2()))
-                return new Pair<>(currentPosition.moveRight2(), facing);
-            long minX = input.map().keySet().stream().filter(xy -> xy.y() == currentPosition.y()).mapToLong(XY::x).min().orElseThrow();
-            return new Pair<>(new XY(minX, currentPosition.y()), facing);
-        }
-        if (facing == 2) {
-            if (input.map().containsKey(currentPosition.moveLeft2()))
-                return new Pair<>(currentPosition.moveLeft2(), facing);
-            long maxX = input.map().keySet().stream().filter(xy -> xy.y() == currentPosition.y()).mapToLong(XY::x).max().orElseThrow();
-            return new Pair<>(new XY(maxX, currentPosition.y()), facing);
-        }
-        if (facing == 1) {
-            if (input.map().containsKey(currentPosition.moveDown2()))
-                return new Pair<>(currentPosition.moveDown2(), facing);
-            long minY = input.map().keySet().stream().filter(xy -> xy.x() == currentPosition.x()).mapToLong(XY::y).min().orElseThrow();
-            return new Pair<>(new XY(currentPosition.x(), minY), facing);
-        }
-        if (facing == 3) {
-            if (input.map().containsKey(currentPosition.moveUp2()))
-                return new Pair<>(currentPosition.moveUp2(), facing);
-            long maxY = input.map().keySet().stream().filter(xy -> xy.x() == currentPosition.x()).mapToLong(XY::y).max().orElseThrow();
-            return new Pair<>(new XY(currentPosition.x(), maxY), facing);
-        }
-        throw new RuntimeException();
-    }
-
-    private Character getFacingChar(int facing) {
-        return DIRECTIONS.entrySet().stream().filter(e -> e.getValue().equals(facing)).map(Map.Entry::getKey).findFirst().orElseThrow();
+        return tracePath(this::wrapAround);
     }
 
     long part2() throws IOException {
-        int facing = 0;
-        long x = input.map().entrySet().stream()
+        return tracePath(this::asCube);
+    }
+
+    private long tracePath(Function<Position, Position> wrappingStrategy) {
+        long startX = input.map().entrySet().stream()
                 .filter(e -> e.getValue().equals('.'))
                 .map(Map.Entry::getKey)
                 .filter(e -> e.y() == 1)
                 .mapToLong(XY::x)
                 .min().orElseThrow();
-        XY currentPosition = new XY(x, 1);
-        input.map().put(currentPosition, getFacingChar(facing));
+        Position currentPosition = new Position(new XY(startX, 1), RIGHT);
+
+        input.map().put(
+                currentPosition.coordinates(),
+                currentPosition.direction().asChar());
+
         for (String instruction : input.instructions()) {
             if (NUMBER.matcher(instruction).matches()) {
-                Pair<XY, Integer> moveTO = move2(currentPosition, Long.parseLong(instruction), facing);
-                currentPosition = moveTO.first();
-                facing = moveTO.second();
+                currentPosition = moveIntoDirection(currentPosition, Long.parseLong(instruction), wrappingStrategy);
             } else {
-                if (instruction.equals("L")) facing--;
-                if (instruction.equals("R")) facing++;
-                if (facing == -1) facing = 3;
-                if (facing == 4) facing = 0;
-                input.map().put(currentPosition, getFacingChar(facing));
+                currentPosition = new Position(
+                        currentPosition.coordinates(),
+                        instruction.equals("L") ? currentPosition.direction().left() : currentPosition.direction().right());
+                input.map().put(currentPosition.coordinates(), currentPosition.direction().asChar());
             }
         }
-        return 1000L * currentPosition.y() + 4 * currentPosition.x() + facing;
+        return 1000L * currentPosition.coordinates().y() + 4 * currentPosition.coordinates().x() + currentPosition.direction().asInt();
     }
 
-    private Pair<XY, Integer> move2(XY currentPosition, long steps, int facing) {
-        XY next = currentPosition;
-        while (steps-- > 0) {
-            XY previous = next;
-            Integer previousFacing = facing;
-            Pair<XY, Integer> move = getNextTile2(next, facing);
-            next = move.first();
-            facing = move.second();
-            if (input.map().getOrDefault(next, ' ').equals('#')) return new Pair<>(previous, previousFacing);
-            input.map().put(next, getFacingChar(facing));
+    private Position moveIntoDirection(Position from, long numberOfSteps, Function<Position, Position> wrappingStrategy) {
+        Position nextTile = from;
+        while (numberOfSteps-- > 0) {
+            Position previous = nextTile;
+            nextTile = getNextTile(nextTile, wrappingStrategy);
+            if (input.map().getOrDefault(nextTile.coordinates(), ' ').equals('#')) return previous;
+            input.map().put(nextTile.coordinates(), nextTile.direction().asChar());
         }
-        return new Pair<>(next, facing);
+        return nextTile;
     }
 
-    private Pair<XY, Integer> getNextTile2(XY currentPosition, int facing) {
-        if (facing == 0) {
-            if (input.map().containsKey(currentPosition.moveRight2()))
-                return new Pair<>(currentPosition.moveRight2(), facing);
-            if (getWall(currentPosition).equals('B')) {
-                return rightToRight(currentPosition, 'B', 'E');
+    private Position getNextTile(Position currentPosition, Function<Position, Position> wrappingStrategy) {
+        Function<XY, XY> moveFunction = switch (currentPosition.direction()) {
+            case RIGHT -> XY::moveRight2;
+            case LEFT -> XY::moveLeft2;
+            case DOWN -> XY::moveDown2;
+            case UP -> XY::moveUp2;
+        };
+        XY nextCoordinate = moveFunction.apply(currentPosition.coordinates());
+        if (input.map().containsKey(nextCoordinate)) {
+            return new Position(nextCoordinate, currentPosition.direction());
+        }
+        return wrappingStrategy.apply(currentPosition);
+    }
+
+    private Position wrapAround(Position position) {
+        return switch (position.direction()) {
+            case RIGHT -> new Position(
+                    new XY(
+                            input.map().keySet().stream().filter(xy -> xy.y() == position.coordinates().y()).mapToLong(XY::x).min().orElseThrow(),
+                            position.coordinates().y()),
+                    position.direction());
+            case LEFT -> new Position(
+                    new XY(
+                            input.map().keySet().stream().filter(xy -> xy.y() == position.coordinates().y()).mapToLong(XY::x).max().orElseThrow(),
+                            position.coordinates().y()),
+                    position.direction());
+            case DOWN -> new Position(
+                    new XY(
+                            position.coordinates().x(),
+                            input.map().keySet().stream().filter(xy -> xy.x() == position.coordinates().x()).mapToLong(XY::y).min().orElseThrow()),
+                    position.direction());
+            case UP -> new Position(
+                    new XY(
+                            position.coordinates().x(),
+                            input.map().keySet().stream().filter(xy -> xy.x() == position.coordinates().x()).mapToLong(XY::y).max().orElseThrow()),
+                    position.direction());
+        };
+    }
+
+    private Position asCube(Position position) {
+        if (position.direction() == RIGHT) {
+            if (getWall(position.coordinates()).equals('B')) {
+                return rightToRight(position.coordinates(), 'B', 'E');
             }
-            if (getWall(currentPosition).equals('C')) {
-                return rightToBottom(currentPosition, 'C', 'B');
+            if (getWall(position.coordinates()).equals('C')) {
+                return rightToBottom(position.coordinates(), 'C', 'B');
             }
-            if (getWall(currentPosition).equals('E')) {
-                return rightToRight(currentPosition, 'E', 'B');
+            if (getWall(position.coordinates()).equals('E')) {
+                return rightToRight(position.coordinates(), 'E', 'B');
             }
-            if (getWall(currentPosition).equals('F')) {
-                return rightToBottom(currentPosition, 'F', 'E');
+            if (getWall(position.coordinates()).equals('F')) {
+                return rightToBottom(position.coordinates(), 'F', 'E');
             }
             throw new RuntimeException();
         }
-        if (facing == 2) {
-            if (input.map().containsKey(currentPosition.moveLeft2()))
-                return new Pair<>(currentPosition.moveLeft2(), facing);
-            if (getWall(currentPosition).equals('A')) {
-                return leftToLeft(currentPosition, 'A', 'D');
+        if (position.direction() == LEFT) {
+            if (getWall(position.coordinates()).equals('A')) {
+                return leftToLeft(position.coordinates(), 'A', 'D');
             }
-            if (getWall(currentPosition).equals('C')) {
-                return leftToTop(currentPosition, 'C', 'D');
+            if (getWall(position.coordinates()).equals('C')) {
+                return leftToTop(position.coordinates(), 'C', 'D');
             }
-            if (getWall(currentPosition).equals('D')) {
-                return leftToLeft(currentPosition, 'D', 'A');
+            if (getWall(position.coordinates()).equals('D')) {
+                return leftToLeft(position.coordinates(), 'D', 'A');
             }
-            if (getWall(currentPosition).equals('F')) {
-                return leftToTop(currentPosition, 'F', 'A');
+            if (getWall(position.coordinates()).equals('F')) {
+                return leftToTop(position.coordinates(), 'F', 'A');
             }
             throw new RuntimeException();
         }
-        if (facing == 1) {
-            if (input.map().containsKey(currentPosition.moveDown2()))
-                return new Pair<>(currentPosition.moveDown2(), facing);
-            if (getWall(currentPosition).equals('B')) {
-                return bottomToRight(currentPosition, 'B', 'C');
+        if (position.direction() == DOWN) {
+            if (getWall(position.coordinates()).equals('B')) {
+                return bottomToRight(position.coordinates(), 'B', 'C');
             }
-            if (getWall(currentPosition).equals('E')) {
-                return bottomToRight(currentPosition, 'E', 'F');
+            if (getWall(position.coordinates()).equals('E')) {
+                return bottomToRight(position.coordinates(), 'E', 'F');
             }
-            if (getWall(currentPosition).equals('F')) {
-                return bottomToTop(currentPosition, 'F', 'B');
+            if (getWall(position.coordinates()).equals('F')) {
+                return bottomToTop(position.coordinates(), 'F', 'B');
             }
             throw new RuntimeException();
         }
-        if (facing == 3) {
-            if (input.map().containsKey(currentPosition.moveUp2()))
-                return new Pair<>(currentPosition.moveUp2(), facing);
-            if (getWall(currentPosition).equals('A')) {
-                return upToLeft(currentPosition, 'A', 'F');
+        if (position.direction() == UP) {
+            if (getWall(position.coordinates()).equals('A')) {
+                return upToLeft(position.coordinates(), 'A', 'F');
             }
-            if (getWall(currentPosition).equals('B')) {
-                return upToBottom(currentPosition, 'B', 'F');
+            if (getWall(position.coordinates()).equals('B')) {
+                return upToBottom(position.coordinates(), 'B', 'F');
             }
-            if (getWall(currentPosition).equals('D')) {
-                return upToLeft(currentPosition, 'D', 'C');
+            if (getWall(position.coordinates()).equals('D')) {
+                return upToLeft(position.coordinates(), 'D', 'C');
             }
             throw new RuntimeException();
         }
@@ -227,75 +188,75 @@ public class Day22 {
     }
 
     @NotNull
-    private Pair<XY, Integer> upToBottom(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position upToBottom(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         minX(toWall) + getXRelative(currentPosition, fromWall),
                         maxY(toWall)),
-                DIRECTIONS.get('^'));
+                Direction.UP);
     }
 
     @NotNull
-    private Pair<XY, Integer> upToLeft(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position upToLeft(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         minX(toWall),
                         minY(toWall) + getXRelative(currentPosition, fromWall)),
-                DIRECTIONS.get('>'));
+                RIGHT);
     }
 
     @NotNull
-    private Pair<XY, Integer> bottomToTop(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position bottomToTop(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         minX(toWall) + getXRelative(currentPosition, fromWall),
                         minY(toWall)),
-                DIRECTIONS.get('v'));
+                Direction.DOWN);
     }
 
     @NotNull
-    private Pair<XY, Integer> bottomToRight(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position bottomToRight(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         maxX(toWall),
                         minY(toWall) + getXRelative(currentPosition, fromWall)),
-                DIRECTIONS.get('<'));
+                Direction.LEFT);
     }
 
     @NotNull
-    private Pair<XY, Integer> leftToTop(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position leftToTop(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         minX(toWall) + getYRelative(currentPosition, fromWall),
                         minY(toWall)),
-                DIRECTIONS.get('v'));
+                Direction.DOWN);
     }
 
     @NotNull
-    private Pair<XY, Integer> leftToLeft(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position leftToLeft(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         minX(toWall),
                         maxY(toWall) - getYRelative(currentPosition, fromWall)),
-                DIRECTIONS.get('>'));
+                RIGHT);
     }
 
     @NotNull
-    private Pair<XY, Integer> rightToRight(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position rightToRight(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         maxX(toWall),
                         maxY(toWall) - getYRelative(currentPosition, fromWall)),
-                DIRECTIONS.get('<'));
+                Direction.LEFT);
     }
 
     @NotNull
-    private Pair<XY, Integer> rightToBottom(XY currentPosition, char fromWall, char toWall) {
-        return new Pair<>(
+    private Position rightToBottom(XY currentPosition, char fromWall, char toWall) {
+        return new Position(
                 new XY(
                         minX(toWall) + getYRelative(currentPosition, fromWall),
                         maxY(toWall)),
-                DIRECTIONS.get('^'));
+                Direction.UP);
     }
 
     private long minY(char wall) {

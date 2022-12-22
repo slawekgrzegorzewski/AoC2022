@@ -218,6 +218,10 @@ public class Input {
         return new Instruction(map, commands);
     }
 
+    public static List<String> day23() throws IOException {
+        return getInputFromFile("/day23");
+    }
+
     private static List<String> getInputFromFile(String resourceName) throws IOException {
         try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(Input.class.getResourceAsStream(resourceName))); BufferedReader reader = new BufferedReader(in)) {
             return reader.lines().collect(Collectors.toList());
