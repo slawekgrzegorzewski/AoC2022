@@ -1,6 +1,6 @@
 package com.adventofcode;
 
-import com.adventofcode.day14.XY;
+import com.adventofcode.input.XY;
 import com.adventofcode.day22.Direction;
 import com.adventofcode.day22.Instruction;
 import com.adventofcode.day22.Position;

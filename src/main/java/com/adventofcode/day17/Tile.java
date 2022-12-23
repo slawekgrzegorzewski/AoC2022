@@ -1,6 +1,6 @@
 package com.adventofcode.day17;
 
-import com.adventofcode.day14.XY;
+import com.adventofcode.input.XY;
 
 import java.util.*;
 

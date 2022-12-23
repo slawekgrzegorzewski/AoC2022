@@ -1,28 +1,28 @@
 package com.adventofcode;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Day23Test {
+class Day25Test {
 
-    static Day23 day23;
+    static Day25 day25;
 
-    @BeforeAll
-    public static void init() throws IOException {
-        day23 = new Day23();
+    @BeforeEach
+    public void init() throws IOException {
+        day25 = new Day25();
     }
 
     @Test
     void testPart1() throws IOException {
-        assertEquals(4052L, day23.part1());
+        assertEquals(0L, day25.part1());
     }
 
     @Test
     void testPart2() throws IOException {
-        assertEquals(978L, day23.part2());
+        assertEquals(0L, day25.part2());
     }
 }

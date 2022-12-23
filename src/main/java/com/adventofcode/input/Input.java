@@ -2,13 +2,13 @@ package com.adventofcode.input;
 
 import com.adventofcode.day11.MonkeyBehaviour;
 import com.adventofcode.day13.ListValue;
-import com.adventofcode.day14.XY;
 import com.adventofcode.day16.Valve;
 import com.adventofcode.day18.XYZ;
 import com.adventofcode.day19.Blueprint;
 import com.adventofcode.day20.NumberWrapper;
 import com.adventofcode.day21.Expression;
 import com.adventofcode.day22.Instruction;
+import com.adventofcode.day23.Elf;
 import com.adventofcode.day4.Range;
 import com.adventofcode.day9.Move;
 import com.google.common.base.Strings;
@@ -218,8 +218,27 @@ public class Input {
         return new Instruction(map, commands);
     }
 
-    public static List<String> day23() throws IOException {
-        return getInputFromFile("/day23");
+    public static Map<XY, Elf> day23() throws IOException {
+        Map<XY, Elf> elfPositions = new HashMap<>();
+        List<String> lines = getInputFromFile("/day23");
+        for (int y = 0; y < lines.size(); y++) {
+            String line = lines.get(y);
+            char[] lineChars = line.toCharArray();
+            for (int x = 0; x < lineChars.length; x++) {
+                if (lineChars[x] == '#') {
+                    elfPositions.put(new XY(x, y), new Elf());
+                }
+            }
+        }
+        return elfPositions;
+    }
+
+    public static List<String> day24() throws IOException {
+        return getInputFromFile("/day24");
+    }
+
+    public static List<String> day25() throws IOException {
+        return getInputFromFile("/day25");
     }
 
     private static List<String> getInputFromFile(String resourceName) throws IOException {

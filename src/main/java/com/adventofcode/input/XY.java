@@ -1,4 +1,4 @@
-package com.adventofcode.day14;
+package com.adventofcode.input;
 
 public record XY(long x, long y) {
     public static XY parse(String value) {
