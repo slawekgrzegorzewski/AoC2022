@@ -8,9 +8,9 @@ import java.util.*;
 import java.util.function.Function;
 
 public class Day24 {
-    private static final List<Character> EMPTY_SPACE = List.of('.');
+    private static final List<Blizzard> EMPTY_SPACE = List.of(new Blizzard('.'));
     public static final List<Character> BLIZZARDS = List.of('>', '<', '^', 'v');
-    private final Map<XY, List<Character>> input;
+    private final Map<XY, List<Blizzard>> input;
     private final LongSummaryStatistics xStats;
     private final LongSummaryStatistics yStats;
 
@@ -21,11 +21,21 @@ public class Day24 {
     }
 
     long part1() throws IOException {
-        for (int i = 0; i < 100; i++) {
+        List<Map<XY, List<Blizzard>>> steps = new ArrayList<>();
+        for (int i = 0; i < 1_000; i++) {
             moveBlizzards();
-            print();
+            steps.add(copyOf(input));
+            //print();
         }
         return 0L;
+    }
+
+    private Map<XY, List<Blizzard>> copyOf(Map<XY, List<Blizzard>> input) {
+        Map<XY, List<Blizzard>> result = new HashMap<>();
+        for (Map.Entry<XY, List<Blizzard>> e : input.entrySet()) {
+            result.computeIfAbsent(e.getKey(), k -> new ArrayList<>()).addAll(e.getValue());
+        }
+        return result;
     }
 
     long part2() throws IOException {
@@ -34,11 +44,11 @@ public class Day24 {
 
     private void moveBlizzards() {
         List<XY> allBlizzards = input.entrySet().stream().filter(e -> containsBlizzard(e.getValue())).map(Map.Entry::getKey).toList();
-        Map<XY, Map<XY, Character>> moves = new HashMap<>();
+        Map<XY, Map<XY, Blizzard>> moves = new HashMap<>();
         for (XY xy : allBlizzards) {
-            List<Character> characters = input.get(xy);
-            characters.forEach(c -> {
-                XY newPosition = switch (c) {
+            List<Blizzard> blizzards = input.get(xy);
+            blizzards.forEach(c -> {
+                XY newPosition = switch (c.direction()) {
                     case '>' -> nextPosition(xy, XY::moveRight2, from -> new XY(xStats.getMin(), from.y()));
                     case '<' -> nextPosition(xy, XY::moveLeft2, from -> new XY(xStats.getMax(), from.y()));
                     case '^' -> nextPosition(xy, XY::moveUp2, from -> new XY(from.x(), yStats.getMax()));
@@ -52,7 +62,6 @@ public class Day24 {
         }
         moves.forEach((from, destination) -> {
             destination.forEach((to, blizzard) -> {
-                input.get(from).remove(blizzard);
                 input.computeIfPresent(from, (k, v) -> {
                     v.remove(blizzard);
                     return v.isEmpty() ? null : v;
@@ -62,14 +71,14 @@ public class Day24 {
         });
     }
 
-    private boolean containsBlizzard(List<Character> value) {
-        return value.stream().anyMatch(BLIZZARDS::contains);
+    private boolean containsBlizzard(List<Blizzard> value) {
+        return value.stream().map(Blizzard::direction).anyMatch(BLIZZARDS::contains);
     }
 
     private XY nextPosition(XY xy, Function<XY, XY> movingFunction, Function<XY, XY> wrappingFunction) {
-        if (input.getOrDefault(movingFunction.apply(xy), EMPTY_SPACE).contains('#')) {
+        if (input.getOrDefault(movingFunction.apply(xy), EMPTY_SPACE).stream().map(Blizzard::direction).anyMatch(c -> c == '#')) {
             XY newPosition = wrappingFunction.apply(xy);
-            while (input.getOrDefault(newPosition, EMPTY_SPACE).contains('#')) {
+            while (input.getOrDefault(newPosition, EMPTY_SPACE).stream().map(Blizzard::direction).anyMatch(c -> c == '#')) {
                 newPosition = movingFunction.apply(newPosition);
             }
             return newPosition;
@@ -80,7 +89,7 @@ public class Day24 {
     void print() {
         for (long y = yStats.getMin(); y <= yStats.getMax(); y++) {
             for (long x = xStats.getMin(); x <= xStats.getMax(); x++) {
-                List<Character> elementsInPosition = input.getOrDefault(new XY(x, y), EMPTY_SPACE);
+                List<Blizzard> elementsInPosition = input.getOrDefault(new XY(x, y), EMPTY_SPACE);
                 System.out.print(elementsInPosition.size() <= 1 ? elementsInPosition.get(0) : "" + elementsInPosition.size());
             }
             System.out.println();
