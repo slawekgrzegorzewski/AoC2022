@@ -233,8 +233,18 @@ public class Input {
         return elfPositions;
     }
 
-    public static List<String> day24() throws IOException {
-        return getInputFromFile("/day24");
+    public static Map<XY, List<Character>> day24() throws IOException {
+        Map<XY, List<Character>> result = new HashMap<>();
+        List<String> lines = getInputFromFile("/day24");
+        for (int y = 0; y < lines.size(); y++) {
+            char[] chars = lines.get(y).toCharArray();
+            for (int x = 0; x < chars.length; x++) {
+                ArrayList<Character> characters = new ArrayList<>();
+                characters.add(chars[x]);
+                if (chars[x] != '.') result.put(new XY(x, y), characters);
+            }
+        }
+        return result;
     }
 
     public static List<String> day25() throws IOException {
