@@ -1,6 +1,6 @@
 package com.adventofcode.input;
 
-import com.adventofcode.Blizzard;
+import com.adventofcode.MapElement;
 import com.adventofcode.day11.MonkeyBehaviour;
 import com.adventofcode.day13.ListValue;
 import com.adventofcode.day16.Valve;
@@ -234,14 +234,14 @@ public class Input {
         return elfPositions;
     }
 
-    public static Map<XY, List<Blizzard>> day24() throws IOException {
-        Map<XY, List<Blizzard>> result = new HashMap<>();
+    public static Map<XY, List<MapElement>> day24() throws IOException {
+        Map<XY, List<MapElement>> result = new HashMap<>();
         List<String> lines = getInputFromFile("/day24");
         for (int y = 0; y < lines.size(); y++) {
             char[] chars = lines.get(y).toCharArray();
             for (int x = 0; x < chars.length; x++) {
-                ArrayList<Blizzard> characters = new ArrayList<>();
-                characters.add(new Blizzard(chars[x]));
+                ArrayList<MapElement> characters = new ArrayList<>();
+                characters.add(new MapElement(chars[x]));
                 if (chars[x] != '.') result.put(new XY(x, y), characters);
             }
         }
